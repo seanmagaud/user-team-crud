@@ -1,7 +1,13 @@
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import {
+  HttpException,
+  HttpStatus,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { CreateUserDto } from './dto/createUser.dto';
+import { UpdateUserDto } from './dto/updateUser.dto';
 import { UserEntity } from './user.entity';
 
 @Injectable() // DI nest system
@@ -39,8 +45,35 @@ export class UserService {
     return await this.userRepository.save(newUser);
   }
 
-  async findById(id: number): Promise<UserEntity> {
-    return this.userRepository.findOne(id);
+  async findById(userId: number): Promise<UserEntity> {
+    return this.userRepository.findOne(userId);
+  }
+
+  async findAll(): Promise<UserEntity[]> {
+    return this.userRepository.find();
+  }
+
+  async updateUser(
+    userId: number,
+    updateUserDto: UpdateUserDto,
+  ): Promise<UserEntity> {
+    const user = await this.findById(userId);
+    if (!user) {
+      throw new NotFoundException('User does not exist!');
+    }
+    Object.assign(user, updateUserDto);
+
+    return await this.userRepository.save(user);
+  }
+
+  async deleteUser(userId: number): Promise<HttpStatus> {
+    const user = await this.findById(userId);
+    if (!user) {
+      throw new NotFoundException('User does not exist!');
+    }
+    await this.userRepository.remove(user);
+
+    return HttpStatus.OK;
   }
 
   buildUserResponse(user: UserEntity): UserEntity {

@@ -1,5 +1,5 @@
 import { EntityBase } from '@app/entity-inheritance/entity.base';
-import { Column, Entity } from 'typeorm';
+import { BeforeUpdate, Column, Entity } from 'typeorm';
 
 export enum UserRole {
   LEAD = 'Squad Leader',
@@ -24,6 +24,11 @@ export class UserEntity extends EntityBase {
     default: UserRole.INTERN,
   })
   role: UserRole;
+
+  @BeforeUpdate()
+  updateTimestamp() {
+    this.updatedAt = new Date();
+  }
 
   //@ManyToOne(() => TeamEntity, (team) => team.name)
   //team: TeamEntity[];

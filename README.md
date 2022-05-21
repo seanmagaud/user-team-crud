@@ -1,19 +1,7 @@
 # flynt-test
 
-## First step - dependencies
+## Set-up
 
-> nodemon
+create a postgresql database named flyntcrud, with flyntcrud user and toor password
 
-reloading our server on save
-
-> module-alias
-
-create aliases for clean module path
-
-> pg
-
-used to interfacing nodejs module with postgresql
-
-> typeorm / class-validator / class-transformer
-
-generate all sql structure for our entities
+> cd backend && yarn && yarn db:migrate && yarn start
