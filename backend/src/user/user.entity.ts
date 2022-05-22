@@ -1,11 +1,6 @@
 import { EntityBase } from '@app/entity-inheritance/entity.base';
-import { BeforeUpdate, Column, Entity } from 'typeorm';
-
-export enum UserRole {
-  LEAD = 'Squad Leader',
-  DEV = 'Squad Member',
-  INTERN = 'Intern',
-}
+import { TeamEntity } from '@app/team/team.entity';
+import { BeforeUpdate, Column, Entity, JoinTable, ManyToMany } from 'typeorm';
 
 @Entity({ name: 'users' })
 export class UserEntity extends EntityBase {
@@ -18,18 +13,18 @@ export class UserEntity extends EntityBase {
   @Column()
   email: string;
 
-  @Column({
-    type: 'enum',
-    enum: UserRole,
-    default: UserRole.INTERN,
-  })
-  role: UserRole;
+  @Column()
+  role: number;
 
   @BeforeUpdate()
   updateTimestamp() {
     this.updatedAt = new Date();
   }
 
-  //@ManyToOne(() => TeamEntity, (team) => team.name)
-  //team: TeamEntity[];
+  @JoinTable()
+  @ManyToMany(() => TeamEntity, (team) => team.users, { cascade: true })
+  teams: TeamEntity[];
+
+  // A user can have multiple teams
+  // A team can have multiple users
 }

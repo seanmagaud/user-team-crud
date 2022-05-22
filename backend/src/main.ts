@@ -13,6 +13,7 @@ async function bootstrap() {
       transform: true,
     }),
   ); // https://docs.nestjs.com/techniques/validation#transform-payload-objects
+  app.enableCors();
   await app.listen(3000);
 }
 bootstrap();

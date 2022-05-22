@@ -19,3 +19,15 @@ define and valide our entity, generate migrations, repository
 ## Further steps
 
 Add message response, status for all crud
+
+Restrict team creation with existing users id
+
+Restrict role incrementation backend side
+
+Finish findByRole logic
+
+## Troubleshootings
+
+Table joins
+
+User role

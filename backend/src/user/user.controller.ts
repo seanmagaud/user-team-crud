@@ -8,8 +8,6 @@ import {
   ParseIntPipe,
   Post,
   Put,
-  UsePipes,
-  ValidationPipe,
 } from '@nestjs/common';
 import { CreateUserDto } from './dto/createUser.dto';
 import { UpdateUserDto } from './dto/updateUser.dto';
@@ -20,7 +18,7 @@ import { UserService } from './user.service';
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
-  @Post('user/create')
+  @Post('user')
   async createUser(
     @Body('user')
     createUserDto: CreateUserDto,
@@ -40,6 +38,20 @@ export class UserController {
   @Get('users')
   async users(): Promise<UserEntity[]> {
     return this.userService.findAll();
+  }
+
+  @Put('user/promote/:id')
+  async promoteUser(
+    @Param('id', ParseIntPipe) userId: number,
+  ): Promise<UserEntity> {
+    return this.userService.promoteUser(userId);
+  }
+
+  @Put('user/demote/:id')
+  async demoteUser(
+    @Param('id', ParseIntPipe) userId: number,
+  ): Promise<UserEntity> {
+    return this.userService.demoteUser(userId);
   }
 
   @Put('user/:id')

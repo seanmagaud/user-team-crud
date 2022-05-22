@@ -5,7 +5,7 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { createQueryBuilder, Repository } from 'typeorm';
 import { CreateUserDto } from './dto/createUser.dto';
 import { UpdateUserDto } from './dto/updateUser.dto';
 import { UserEntity } from './user.entity';
@@ -17,17 +17,6 @@ export class UserService {
     private readonly userRepository: Repository<UserEntity>,
   ) {}
   async createUser(createUserDto: CreateUserDto): Promise<UserEntity> {
-    if (
-      await this.userRepository.findOne({
-        firstname: createUserDto.firstname,
-      })
-    ) {
-      throw new HttpException(
-        'Username already taken',
-        HttpStatus.UNPROCESSABLE_ENTITY,
-      );
-    }
-
     if (
       await this.userRepository.findOne({
         email: createUserDto.email,
@@ -66,6 +55,31 @@ export class UserService {
     return await this.userRepository.save(user);
   }
 
+  async promoteUser(userId: number): Promise<UserEntity> {
+    const user = await this.findById(userId);
+    if (!user) {
+      throw new NotFoundException('User does not exist!');
+    }
+
+    user.role = user.role + 1;
+
+    Object.assign(user);
+
+    return await this.userRepository.save(user);
+  }
+
+  async demoteUser(userId: number): Promise<UserEntity> {
+    const user = await this.findById(userId);
+    if (!user) {
+      throw new NotFoundException('User does not exist!');
+    }
+    user.role = user.role - 1;
+
+    Object.assign(user);
+
+    return await this.userRepository.save(user);
+  }
+
   async deleteUser(userId: number): Promise<HttpStatus> {
     const user = await this.findById(userId);
     if (!user) {
@@ -74,6 +88,23 @@ export class UserService {
     await this.userRepository.remove(user);
 
     return HttpStatus.OK;
+  }
+
+  async findByRole(roleId: number): Promise<any> {
+    const user = await createQueryBuilder('user')
+      .leftJoinAndSelect('users.teams', 'team')
+      .select([
+        'user.id',
+        'user.firstname',
+        'user.lastname',
+        'user.role',
+        'team.name',
+      ])
+      .where('user.role = :roleId', { roleId: roleId })
+      .getMany();
+    console.log(user);
+
+    return user;
   }
 
   buildUserResponse(user: UserEntity): UserEntity {
