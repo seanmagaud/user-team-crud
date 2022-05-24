@@ -12,7 +12,8 @@ import {
 
 const CreateTeam: React.FC = () => {
   const [leads, setLeads] = useState<[]>();
-  const [users, setUsers] = useState<[]>();
+  const [members, setMembers] = useState<[]>();
+  const [interns, setInterns] = useState<[]>();
 
   useEffect(() => {
     const fetchLead = async (): Promise<void> => {
@@ -20,7 +21,8 @@ const CreateTeam: React.FC = () => {
         `${process.env.REACT_APP_SERVER_BASE_URL}/users`
       );
       const results = await response.json();
-      setUsers(results.filter((user: { role: number }) => user.role !== 3));
+      setMembers(results.filter((user: { role: number }) => user.role === 2));
+      setInterns(results.filter((user: { role: number }) => user.role === 1));
       setLeads(
         results.filter(
           (user: { teams: []; role: number }) =>
@@ -34,6 +36,11 @@ const CreateTeam: React.FC = () => {
   const { control, handleSubmit } = useForm<TeamSubmitForm>();
 
   const onSubmit = async (data: TeamSubmitForm): Promise<void> => {
+    if (data.member.length !== 2) {
+      alert("you must select two members !");
+
+      return;
+    }
     const datas = {
       name: data.name,
       users: [data.leader, data.intern, data.member]
@@ -134,16 +141,16 @@ const CreateTeam: React.FC = () => {
                     multiple
                     defaultValue={[]}
                   >
-                    {users?.map(
-                      (user: {
+                    {members?.map(
+                      (member: {
                         id: number;
                         firstname: string;
                         lastname: string;
                         email: string;
                         role: string;
                       }) => (
-                        <MenuItem value={user.id} key={user.id}>
-                          {user.firstname} {user.lastname}
+                        <MenuItem value={member.id} key={member.id}>
+                          {member.firstname} {member.lastname}
                         </MenuItem>
                       )
                     )}
@@ -161,24 +168,17 @@ const CreateTeam: React.FC = () => {
               <FormControl sx={wFull}>
                 <div className="form-group">
                   <InputLabel id="intern">Interns</InputLabel>
-                  <Select
-                    {...field}
-                    labelId="intern"
-                    label="intern"
-                    sx={wFull}
-                    multiple
-                    defaultValue={[]}
-                  >
-                    {users?.map(
-                      (user: {
+                  <Select {...field} labelId="intern" label="intern" sx={wFull}>
+                    {interns?.map(
+                      (intern: {
                         id: number;
                         firstname: string;
                         lastname: string;
                         email: string;
                         role: string;
                       }) => (
-                        <MenuItem value={user.id} key={user.id}>
-                          {user.firstname} {user.lastname}
+                        <MenuItem value={intern.id} key={intern.id}>
+                          {intern.firstname} {intern.lastname}
                         </MenuItem>
                       )
                     )}
