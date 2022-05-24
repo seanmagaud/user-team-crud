@@ -31,3 +31,5 @@ Finish findByRole logic
 Table joins
 
 User role
+
+Link users on Team with ManyToMany relation (try to add the whole object, then only the id; but I must add [ {id: X} ] , as we love, nothing is clearly explaned on the documentation)

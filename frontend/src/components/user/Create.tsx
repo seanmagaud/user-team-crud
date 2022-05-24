@@ -2,12 +2,7 @@ import React, { FC } from "react";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as Yup from "yup";
-
-type UserSubmitForm = {
-  firstname: string;
-  lastname: string;
-  email: string;
-};
+import { UserSubmitForm } from "../../@types/users.d";
 
 const CreateUser: FC = () => {
   const validationSchema = Yup.object().shape({
@@ -54,7 +49,9 @@ const CreateUser: FC = () => {
           <input
             type="text"
             {...register("firstname")}
-            className={`form-control ${errors.firstname ? "is-invalid" : ""}`}
+            className={`shadow-none form-control ${
+              errors.firstname ? "is-invalid" : ""
+            }`}
           />
           <div className="invalid-feedback">{errors.firstname?.message}</div>
         </div>
@@ -64,7 +61,9 @@ const CreateUser: FC = () => {
           <input
             type="text"
             {...register("lastname")}
-            className={`form-control ${errors.lastname ? "is-invalid" : ""}`}
+            className={`shadow-none form-control ${
+              errors.lastname ? "is-invalid" : ""
+            }`}
           />
           <div className="invalid-feedback">{errors.lastname?.message}</div>
         </div>
@@ -74,7 +73,9 @@ const CreateUser: FC = () => {
           <input
             type="text"
             {...register("email")}
-            className={`form-control ${errors.email ? "is-invalid" : ""}`}
+            className={`shadow-none form-control ${
+              errors.email ? "is-invalid" : ""
+            }`}
           />
           <div className="invalid-feedback">{errors.email?.message}</div>
         </div>

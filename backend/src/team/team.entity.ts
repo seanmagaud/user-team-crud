@@ -12,14 +12,9 @@ export class TeamEntity extends EntityBase {
     this.updatedAt = new Date();
   }
 
-  @ManyToMany(() => UserEntity, (user) => user.teams)
+  @ManyToMany(() => UserEntity, (user) => user.teams, { cascade: true })
   users: UserEntity[];
 
-  // Faire la validation côté front uniquement
-  // Un user peut avoir plusieurs teams
-  // Un team peut avoir plusieurs users
-  // Plusieurs users peuvent avoir plusieurs teams
-  // Plusieurs teams peuvent avoir plusieurs users
-  // Il ne peut pas avoir de relation One,
-  // On fait du manytomany et on fait la validation côté front uniquement
+  // A user can have multiple teams
+  // A team can have multiple users
 }

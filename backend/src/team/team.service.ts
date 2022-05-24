@@ -1,3 +1,4 @@
+import { UserService } from '@app/user/user.service';
 import {
   HttpException,
   HttpStatus,
@@ -14,7 +15,7 @@ import { TeamEntity } from './team.entity';
 export class TeamService {
   constructor(
     @InjectRepository(TeamEntity)
-    private readonly teamRepository: Repository<TeamEntity>,
+    private readonly teamRepository: Repository<TeamEntity>, // private userService: UserService,
   ) {}
   async createTeam(createTeamDto: CreateTeamDto): Promise<TeamEntity> {
     if (
@@ -27,10 +28,12 @@ export class TeamService {
         HttpStatus.UNPROCESSABLE_ENTITY,
       );
     }
-
+    // let users = await this.userService.findByIds(createTeamDto.users);
+    // console.log(users);
     const newTeam = new TeamEntity();
+    // newTeam.users = createTeamDto.users;
     Object.assign(newTeam, createTeamDto); // https://docs.nestjs.com/techniques/serialization
-
+    console.log(newTeam);
     return await this.teamRepository.save(newTeam);
   }
 
@@ -39,7 +42,7 @@ export class TeamService {
   }
 
   async findAll(): Promise<TeamEntity[]> {
-    return this.teamRepository.find();
+    return this.teamRepository.find({ relations: ['users'] });
   }
 
   async updateTeam(

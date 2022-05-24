@@ -15,17 +15,17 @@ validate our data forms
 
 ## Further steps
 
-Add delete button
-
 Add editing user with forms
 
-Finish team page logic, use yup to validate users joining the team with restriction to one Squad Leader
+Use context to store api calls (for users in e.g.)
+
+Split our api calls on specific folder
 
 Clean components arborescence with good practices
 
 Split with micro components (users page in e.g.)
 
-Add scss use tailwind instead of bootstrap, or even more, use styled components
+Transform the complete app on scss use tailwind instead of bootstrap, or even more, use styled components (just used to Users/Teams page)
 
 Add React Testing Library, storybook
 

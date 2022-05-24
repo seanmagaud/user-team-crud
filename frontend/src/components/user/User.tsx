@@ -1,18 +1,6 @@
 import React, { FC } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-
-type UserType = {
-  firstname: string;
-  lastname: string;
-  email: string;
-  role: string;
-  teams: string;
-};
-
-interface UserProps {
-  user: UserType;
-  onClick: any;
-}
+import { UserProps } from "../../@types/users.d";
 
 const User: FC<UserProps> = ({ user, onClick }): JSX.Element => {
   const { firstname, lastname, email, role, teams } = user;
@@ -52,7 +40,14 @@ const User: FC<UserProps> = ({ user, onClick }): JSX.Element => {
             <p>{decodeRole(role)}</p>
 
             <b>Teams</b>
-            <p>{teams}</p>
+            <p>
+              {teams &&
+                teams?.map((team: { id: number; name: string }) => (
+                  <span className="mr-2" key={team.id}>
+                    {team.name}
+                  </span>
+                ))}
+            </p>
           </>
         )}
       </div>

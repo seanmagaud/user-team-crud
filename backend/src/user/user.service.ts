@@ -39,7 +39,7 @@ export class UserService {
   }
 
   async findAll(): Promise<UserEntity[]> {
-    return this.userRepository.find();
+    return this.userRepository.find({ relations: ['teams'] });
   }
 
   async updateUser(
@@ -88,23 +88,6 @@ export class UserService {
     await this.userRepository.remove(user);
 
     return HttpStatus.OK;
-  }
-
-  async findByRole(roleId: number): Promise<any> {
-    const user = await createQueryBuilder('user')
-      .leftJoinAndSelect('users.teams', 'team')
-      .select([
-        'user.id',
-        'user.firstname',
-        'user.lastname',
-        'user.role',
-        'team.name',
-      ])
-      .where('user.role = :roleId', { roleId: roleId })
-      .getMany();
-    console.log(user);
-
-    return user;
   }
 
   buildUserResponse(user: UserEntity): UserEntity {

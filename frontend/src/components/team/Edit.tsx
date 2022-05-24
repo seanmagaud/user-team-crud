@@ -1,16 +1,12 @@
 import React, { FC } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { EditUserProps } from "../../@types/users.d";
+import { EditTeamProps } from "../../@types/teams.d";
 
-const EditUser: FC<EditUserProps> = ({
-  onClick,
-  demote,
-  promote,
-}): JSX.Element => {
+const EditTeam: FC<EditTeamProps> = ({ onClick, deleteTeam }): JSX.Element => {
   return (
     <section className="col-2">
       <div className="d-flex justify-content-between pb-4 pt-2 align-items-center">
-        <b>Edit User</b>
+        <b>Edit Team</b>
 
         <span
           onClick={onClick}
@@ -22,21 +18,14 @@ const EditUser: FC<EditUserProps> = ({
       </div>
 
       <span
-        onClick={demote}
+        onClick={deleteTeam}
         className="nav-link text-reset text-center"
         style={{ cursor: "pointer" }}
       >
-        Demote user
-      </span>
-      <span
-        onClick={promote}
-        className="nav-link text-reset text-center"
-        style={{ cursor: "pointer" }}
-      >
-        Promote user
+        Delete Team
       </span>
     </section>
   );
 };
 
-export default EditUser;
+export default EditTeam;

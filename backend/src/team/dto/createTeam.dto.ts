@@ -6,5 +6,5 @@ export class CreateTeamDto {
   readonly name: string;
 
   @IsNotEmpty()
-  readonly users: UserEntity;
+  readonly users: UserEntity[];
 }

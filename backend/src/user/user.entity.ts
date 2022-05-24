@@ -13,7 +13,7 @@ export class UserEntity extends EntityBase {
   @Column()
   email: string;
 
-  @Column()
+  @Column({ default: 1 })
   role: number;
 
   @BeforeUpdate()
@@ -22,7 +22,7 @@ export class UserEntity extends EntityBase {
   }
 
   @JoinTable()
-  @ManyToMany(() => TeamEntity, (team) => team.users, { cascade: true })
+  @ManyToMany(() => TeamEntity, (team) => team.users)
   teams: TeamEntity[];
 
   // A user can have multiple teams

@@ -1,38 +1,48 @@
-import React, { useState, useEffect } from "react";
-import { useParams } from "react-router";
+import React, { FC } from "react";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { TeamProps } from "../../@types/teams.d";
 
-const Team = () => {
-  let { teamId } = useParams();
-  const [team, setTeam] = useState<any>({});
-
-  useEffect(() => {
-    const fetchData = async (): Promise<void> => {
-      const response = await fetch(
-        `${process.env.REACT_APP_SERVER_BASE_URL}/team/${teamId}`
-      );
-      const json = await response.json();
-      console.log(json);
-
-      setTeam(json);
-    };
-    fetchData();
-  }, [teamId]);
+const Team: FC<TeamProps> = ({ team, onClick }): JSX.Element => {
+  const { name, users } = team;
 
   return (
-    <section className="">
+    <section className="col-2">
+      <div className="d-flex justify-content-between pb-4 pt-2 align-items-center">
+        <b>Team Detail</b>
+
+        <div
+          onClick={onClick}
+          className="nav-link text-reset text-center"
+          style={{ cursor: "pointer" }}
+        >
+          <FontAwesomeIcon icon="edit" />
+        </div>
+      </div>
       <div className="">
         {team && (
           <>
             <b>Team</b>
-            <p>{team.name}</p>
-            <b>Persons</b>
-            <br />
-            <b>Leader</b>
-            <p>{team.leader}</p>
-            <b>Members</b>
-            <p>{team.members}</p>
-            <b>Interns</b>
-            <p>{team.interns}</p>
+            <p>{name}</p>
+            <p>
+              <span className="d-block">
+                <b>Leader</b>
+              </span>
+              {users[0]?.firstname} {users[0]?.lastname}
+            </p>
+            <p>
+              <span className="d-block">
+                <b>Members</b>
+              </span>
+              {users[1]?.firstname} {users[2]?.lastname}
+              <br />
+              {users[2]?.firstname} {users[2]?.lastname}
+            </p>
+            <p>
+              <span className="d-block">
+                <b>Interns</b>
+              </span>
+              {users[3]?.firstname} {users[3]?.lastname}
+            </p>
           </>
         )}
       </div>

@@ -3,6 +3,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import CreateUser from "./Create";
 import User from "./User";
 import EditUser from "./Edit";
+import styled from "styled-components";
 
 const Users: FC = (): JSX.Element => {
   const [users, setUsers] = useState<[]>();
@@ -68,6 +69,8 @@ const Users: FC = (): JSX.Element => {
         method: "put",
       }
     );
+
+    window.location.reload();
   };
 
   useEffect(() => {
@@ -75,15 +78,29 @@ const Users: FC = (): JSX.Element => {
       const response = await fetch(
         `${process.env.REACT_APP_SERVER_BASE_URL}/users`
       );
-      const json = await response.json();
-      setUsers(json);
+      const results = await response.json();
+
+      results.sort(
+        // Sort highest role first
+        (a: { role: number }, b: { role: number }) => b.role - a.role
+      );
+      setUsers(results);
     };
     fetchUsers();
   }, []);
 
+  const Card = styled.div`
+    &:hover {
+      background: #cba4f95c;
+      div {
+        color: #5c0bbb;
+      }
+    }
+  `;
+
   return (
     <>
-      <section className="col-2">
+      <section className="col-3">
         <div className="d-flex justify-content-between pb-4 pt-2 align-items-center">
           <b>User List</b>
 
@@ -105,13 +122,16 @@ const Users: FC = (): JSX.Element => {
                 email: string;
                 role: string;
               }) => (
-                <div
+                <Card
                   onClick={() => showUserDetailComponent(user)}
-                  className="py-2 text-reset text-decoration-none"
+                  className="py-3 text-reset text-decoration-none d-flex align-items-center"
                   style={{ cursor: "pointer" }}
                   key={user.id}
                 >
-                  <p>
+                  <div className="mx-4">
+                    <FontAwesomeIcon icon="user" />
+                  </div>
+                  <div>
                     <b>
                       <>
                         {user.firstname} {user.lastname} (
@@ -120,8 +140,8 @@ const Users: FC = (): JSX.Element => {
                     </b>
                     <br />
                     <span>{user.email}</span>
-                  </p>
-                </div>
+                  </div>
+                </Card>
               )
             )}
         </div>
@@ -132,7 +152,6 @@ const Users: FC = (): JSX.Element => {
       )}
       {editUserVisible && (
         <EditUser
-          user={userSelected}
           onClick={() => setEditUserVisible(false)}
           promote={promoteUser}
           demote={demoteUser}
